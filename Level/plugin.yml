@@ -1,0 +1,5 @@
+name: Level
+version: 1.5.0
+main: Neo\Level
+author: Neo
+api: 4.2.0
