@@ -10,9 +10,9 @@ use pocketmine\player\Player;
 class LevelUpEvent extends PlayerEvent implements Cancellable {
     use CancellableTrait;
     
-    public function __construct(protected Player $player, private int $level)
+    public function __construct(Player $player, private int $level)
     {
-        
+        $this->player = $player;
     }
 
     public function getLevel() : int {

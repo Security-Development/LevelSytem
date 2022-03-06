@@ -4,6 +4,7 @@ namespace Neo\utils;
 
 use Closure;
 use Neo\event\LevelUpEvent;
+use Neo\event\XpChangeEvent;
 use Neo\struct\LevelStruct;
 use Neo\Level;
 use pocketmine\lang\Language;
@@ -20,9 +21,13 @@ class LevelUtils implements LevelStruct {
             $data[$player->getName()] = [
                 'level' => 1,
                 'xp' => 0,
-                'maxXp' => 1000
+                'maxXp' => 10
             ];
             Level::setData($data);
+
+            $player->getXpManager()->setXpLevel($data[$player->getName()]['level']);
+            $player->getXpManager()->setXpProgress(self::getXpPercent($player) / 100);
+
         }
     }
 
@@ -56,8 +61,11 @@ class LevelUtils implements LevelStruct {
     public static function setXp(Player $player, int $exp): void
     {
         $data = Level::getData();
+        $old = $data[$player->getName()]['xp'];
         $data[$player->getName()]['xp'] = $exp;
         Level::setData($data);
+
+        (new XpChangeEvent($player, $old, $exp))->call();
 
     }
 
@@ -88,12 +96,14 @@ class LevelUtils implements LevelStruct {
         $player->getNetworkSession()->sendDataPacket((new PlaySoundPacket)::create(
             "random.levelup", 
             $player->getLocation()->x, $player->getLocation()->y + 1, $player->getLocation()->z,
-            1.0,
+            0.5,
             $player->getLocation()->pitch
             )
         );
 
         (new LevelUpEvent($player, self::getLevel($player) + $number))->call();
+
+        self::incLevel($player, $number);
         
     }
 

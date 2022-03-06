@@ -14,7 +14,24 @@ class CommandUtils {
         ExtendsLib::initCommand(
             "레벨", Level::getLang("command.level"),
             function(Player $player, array $args) {
-                $player->sendMessage(Level::getLang("my.level.message", [LevelUtils::getLevel($player), LevelUtils::getXp($player), LevelUtils::getXpPercent($player)]));
+                if( !isset($args[0]) ) {
+                    $player->sendMessage(Level::getLang("my.level.message", [LevelUtils::getLevel($player), LevelUtils::getXp($player), LevelUtils::getXpPercent($player)]));
+                } else {
+                    $handlePlayer = null;
+
+                    foreach( Level::getData() as $key => $value ) {
+                        if( stripos($key, $args[0]) === 0 ) {
+                            $handlePlayer = Server::getInstance()->getOfflinePlayer($key) ?? null;
+                        }
+                    }
+
+                    if( $handlePlayer === null ) {
+                        $player->sendMessage(Level::getLang("command.level.not.found", [$args[0]]));
+                    } else {
+                        $player->sendMessage(Level::getLang("target.level.message", [$handlePlayer->getName(), LevelUtils::getLevel($handlePlayer), LevelUtils::getXp($handlePlayer), LevelUtils::getXpPercent($handlePlayer)]));
+                    }
+
+                }
 
             }, DefaultPermissionNames::BROADCAST_USER
         );
@@ -43,6 +60,7 @@ class CommandUtils {
                     ]);
                 }
 
+                $player->sendMessage(Level::getLang("level.rank.title", [$key + 1,  (count($db) / 5) < 1 ? 1 : round((count($db) / 5))]));
                 for( $i = $key - 1; $i < $key + 4; $i++ ) 
                     if( isset($db[$i]) ) {
                         $arr = $db[$i];
