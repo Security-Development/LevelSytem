@@ -52,10 +52,13 @@ class LevelUtils implements LevelStruct {
 
     public static function setLevel(Player $player, int $level): void
     {
+        $ev = (new LevelChangeEvent($player, self::getLevel($player), $level));
+        if( $ev->getAction() === LevelChangeEvent::DEAFULAT )
+            $ev->call();
+
         $data = Level::getData();
         $data[$player->getName()]['level'] = $level;
         Level::setData($data);
-        
     }
 
     public static function setXp(Player $player, int $exp): void
@@ -65,13 +68,14 @@ class LevelUtils implements LevelStruct {
         $data[$player->getName()]['xp'] = $exp;
         Level::setData($data);
 
-        (new XpChangeEvent($player, $old, $exp))->call();
+        (new XpChangeEvent($player, $old, $exp));
 
     }
 
     public static function incLevel(Player $player, int $level): void
     {
         self::setLevel($player, self::getLevel($player) + $level);
+        (new LevelChangeEvent($player, $level))->call();
     }
 
     public static function incXp(Player $player, int $exp): void
@@ -100,8 +104,6 @@ class LevelUtils implements LevelStruct {
             $player->getLocation()->pitch
             )
         );
-
-        (new LevelUpEvent($player, self::getLevel($player) + $number))->call();
 
         self::incLevel($player, $number);
         
