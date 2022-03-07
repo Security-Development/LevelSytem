@@ -27,6 +27,9 @@ interface LevelStruct {
 
     # 경험치를 설정 하는 메소드
     public static function setXp(Player $player, int $exp) : void;
+    
+    # 최대 경험치를 설정하는 메소드
+    public static function setMaxXp(Player $player, int $exp) : void;
 
     # 레벨을 추가하는 메소드
     public static function incLevel(Player $player, int $level) : void;
