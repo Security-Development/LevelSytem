@@ -10,6 +10,13 @@ use pocketmine\player\Player;
 class XpChangeEvent extends PlayerEvent implements Cancellable {
     use CancellableTrait;
 
+    # 레벨 오를때의 Action
+    public const UP = 0;
+    # 레벨 감소할때의 Action
+    public const DOWN = 1;
+    # 레벨이 감소하거다 오르거나 그냥 변경될때의 Action
+    public const DEAFULAT = 2;
+
     public function __construct(Player $player, private int $oldXp, private int $newXp)
     {
         $this->player = $player;
