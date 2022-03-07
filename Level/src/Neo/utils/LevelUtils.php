@@ -61,12 +61,11 @@ class LevelUtils implements LevelStruct {
 
     public static function setXp(Player $player, int $exp): void
     {
+        (new XpChangeEvent($player, self::getXp($player), $exp, XpChangeEvent::DEAFULAT))->call();
         $data = Level::getData();
-        $old = $data[$player->getName()]['xp'];
         $data[$player->getName()]['xp'] = $exp;
         Level::setData($data);
 
-        (new XpChangeEvent($player, $old, $exp))->call();
 
     }
 
@@ -79,6 +78,7 @@ class LevelUtils implements LevelStruct {
 
     public static function incXp(Player $player, int $exp): void
     {
+        (new XpChangeEvent($player, self::getXp($player), self::getXp($player) + $exp, XpChangeEvent::UP))->call();
         self::setXp($player, self::getXp($player) + $exp);
     }
 
@@ -91,6 +91,7 @@ class LevelUtils implements LevelStruct {
 
     public static function decXp(Player $player, int $exp): void
     {
+        (new XpChangeEvent($player, self::getXp($player), self::getXp($player) - $exp, XpChangeEvent::DOWN))->call();
         self::setXp($player, self::getXp($player) - $exp);
     }
 
