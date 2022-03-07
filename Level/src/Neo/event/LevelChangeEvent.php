@@ -14,13 +14,21 @@ class LevelChangeEvent extends PlayerEvent implements Cancellable {
     public const DOWN = 1;
     public const DEAFULAT = 2;
     
-    public function __construct(Player $player, private int $level, private int $action = LevelChangeEvent::DEAFULAT)
+    public function __construct(Player $player, private int $OldLevel, private int $NewLevel, private int $action = LevelChangeEvent::DEAFULAT)
     {
         $this->player = $player;
     }
 
-    public function getLevel() : int {
-        return $this->level;
+    public function getOldLevel() : int {
+        return $this->OldLevel;
+    }
+
+    public function getNewLevel() : int {
+        return $this->NewLevel;
+    }
+
+    public function getAction() : int {
+        return $this->action;
     }
     
 }
