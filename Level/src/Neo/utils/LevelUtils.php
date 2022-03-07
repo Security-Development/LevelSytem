@@ -74,6 +74,10 @@ class LevelUtils implements LevelStruct {
 
     public static function incLevel(Player $player, int $level): void
     {
+        $ev = (new LevelChangeEvent($player, self::getLevel($player), self::getLevel($player) + $level));
+        if( $ev->getAction() === LevelChangeEvent::UP )
+            $ev->call();
+
         self::setLevel($player, self::getLevel($player) + $level);
         (new LevelChangeEvent($player, $level))->call();
     }
@@ -85,6 +89,10 @@ class LevelUtils implements LevelStruct {
 
     public static function decLevel(Player $player, int $level): void
     {
+        $ev = (new LevelChangeEvent($player, self::getLevel($player), self::getLevel($player) - $level));
+        if( $ev->getAction() === LevelChangeEvent::DOWN )
+            $ev->call();
+
         self::setLevel($player, self::getLevel($player) - $level);
     }
 
