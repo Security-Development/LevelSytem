@@ -3,7 +3,7 @@
 namespace Neo\utils;
 
 use Closure;
-use Neo\event\LevelUpEvent;
+use Neo\event\LevelChangeEvent;
 use Neo\event\XpChangeEvent;
 use Neo\struct\LevelStruct;
 use Neo\Level;
@@ -52,9 +52,7 @@ class LevelUtils implements LevelStruct {
 
     public static function setLevel(Player $player, int $level): void
     {
-        $ev = (new LevelChangeEvent($player, self::getLevel($player), $level));
-        if( $ev->getAction() === LevelChangeEvent::DEAFULAT )
-            $ev->call();
+        (new LevelChangeEvent($player, self::getLevel($player), $level, LevelChangeEvent::DEAFULAT))->call();
 
         $data = Level::getData();
         $data[$player->getName()]['level'] = $level;
@@ -68,18 +66,15 @@ class LevelUtils implements LevelStruct {
         $data[$player->getName()]['xp'] = $exp;
         Level::setData($data);
 
-        (new XpChangeEvent($player, $old, $exp));
+        (new XpChangeEvent($player, $old, $exp))->call();
 
     }
 
     public static function incLevel(Player $player, int $level): void
     {
-        $ev = (new LevelChangeEvent($player, self::getLevel($player), self::getLevel($player) + $level));
-        if( $ev->getAction() === LevelChangeEvent::UP )
-            $ev->call();
+        (new LevelChangeEvent($player, self::getLevel($player), self::getLevel($player) + $level, LevelChangeEvent::UP))->call();
 
         self::setLevel($player, self::getLevel($player) + $level);
-        (new LevelChangeEvent($player, $level))->call();
     }
 
     public static function incXp(Player $player, int $exp): void
@@ -89,9 +84,7 @@ class LevelUtils implements LevelStruct {
 
     public static function decLevel(Player $player, int $level): void
     {
-        $ev = (new LevelChangeEvent($player, self::getLevel($player), self::getLevel($player) - $level));
-        if( $ev->getAction() === LevelChangeEvent::DOWN )
-            $ev->call();
+        (new LevelChangeEvent($player, self::getLevel($player), self::getLevel($player) - $level, LevelChangeEvent::DOWN))->call();
 
         self::setLevel($player, self::getLevel($player) - $level);
     }
