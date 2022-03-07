@@ -66,7 +66,12 @@ class LevelUtils implements LevelStruct {
         $data[$player->getName()]['xp'] = $exp;
         Level::setData($data);
 
+    }
 
+    public static function setMaxXp(Player $player, int $exp) : void {
+        $data = Level::getData();
+        $data[$player->getName()]['maxXp'] = $exp;
+        Level::setData($data);
     }
 
     public static function incLevel(Player $player, int $level): void
