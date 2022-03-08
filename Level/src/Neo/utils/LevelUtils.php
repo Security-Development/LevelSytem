@@ -76,34 +76,34 @@ class LevelUtils implements LevelStruct {
         Level::setData($data);
     }
 
-    public static function incLevel(Player $player, int $level, bool $cancelled=true): void
+    public static function incLevel(Player $player, int $level, array $cancelled= [true, true]): void
     {
-        if( $cancelled ) 
+        if( $cancelled[0] ) 
             (new LevelChangeEvent($player, self::getLevel($player), self::getLevel($player) + $level, LevelChangeEvent::UP))->call();
 
-        self::setLevel($player, self::getLevel($player) + $level);
+        self::setLevel($player, self::getLevel($player) + $level, $cancelled[1]);
     }
 
-    public static function incXp(Player $player, int $exp, bool $cancelled=true): void
+    public static function incXp(Player $player, int $exp, array $cancelled= [true, true]): void
     {
-        if( $cancelled )
+        if( $cancelled[0] )
             (new XpChangeEvent($player, self::getXp($player), self::getXp($player) + $exp, XpChangeEvent::UP))->call();
-        self::setXp($player, self::getXp($player) + $exp);
+        self::setXp($player, self::getXp($player) + $exp, $cancelled[1]);
     }
 
-    public static function decLevel(Player $player, int $level, bool $cancelled=true): void
+    public static function decLevel(Player $player, int $level, array $cancelled= [true, true]): void
     {
-        if( $cancelled )
+        if( $cancelled[0] )
             (new LevelChangeEvent($player, self::getLevel($player), self::getLevel($player) - $level, LevelChangeEvent::DOWN))->call();
 
-        self::setLevel($player, self::getLevel($player) - $level);
+        self::setLevel($player, self::getLevel($player) - $level, $cancelled[1]);
     }
 
-    public static function decXp(Player $player, int $exp, bool $cancelled=true): void
+    public static function decXp(Player $player, int $exp, array $cancelled= [true, true]): void
     {
-        if( $cancelled )
+        if( $cancelled[0] )
             (new XpChangeEvent($player, self::getXp($player), self::getXp($player) - $exp, XpChangeEvent::DOWN))->call();
-        self::setXp($player, self::getXp($player) - $exp);
+        self::setXp($player, self::getXp($player) - $exp, $cancelled[1]);
     }
 
     public static function LevelUp(Player $player, int $number): void
