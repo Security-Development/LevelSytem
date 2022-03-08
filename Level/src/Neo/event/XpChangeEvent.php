@@ -17,7 +17,7 @@ class XpChangeEvent extends PlayerEvent implements Cancellable {
     # 레벨이 감소하거다 오르거나 그냥 변경될때의 Action
     public const DEAFULAT = 2;
 
-    public function __construct(Player $player, private int $oldXp, private int $newXp, private int $action)
+    public function __construct(Player $player, private int $oldXp, private int $newXp, private int $action = self::DEAFULAT)
     {
         $this->player = $player;
     }

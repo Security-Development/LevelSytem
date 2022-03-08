@@ -14,6 +14,7 @@ class LevelEvent implements Listener {
         LevelUtils::initLevel($event->getPlayer());
     }
 
+    /* 이벤트 테스트 
     public function onJump(PlayerJumpEvent $event) : void {
         LevelUtils::incXp($event->getPlayer(), 60200);
         $event->getPlayer()->sendMessage('xp 60200획득');
@@ -25,6 +26,8 @@ class LevelEvent implements Listener {
             $player->sendMessage("레벨업을 하셨군요~");
         }
     }
+    */
+
 
     public function onXpChange(XpChangeEvent $event) : void {
 
