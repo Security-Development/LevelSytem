@@ -15,8 +15,8 @@ class LevelEvent implements Listener {
     }
 
     public function onJump(PlayerJumpEvent $event) : void {
-        LevelUtils::incXp($event->getPlayer(), 1250);
-        $event->getPlayer()->sendMessage('xp 1250획득');
+        LevelUtils::incXp($event->getPlayer(), 60200);
+        $event->getPlayer()->sendMessage('xp 60200획득');
     }
 
     public function onLevelUp(LevelChangeEvent $event) {
@@ -27,17 +27,27 @@ class LevelEvent implements Listener {
     }
 
     public function onXpChange(XpChangeEvent $event) : void {
+
         $player = $event->getPlayer();
-        $data = Level::getData();
-    
-        if( LevelUtils::getMaxXp($player) <= $event->getNewXp() ) {
-            $level = round($event->getNewXp() / LevelUtils::getMaxXp($player));
-            LevelUtils::LevelUp($player, $level );
-            LevelUtils::setXp($player, $event->getNewXp() - (LevelUtils::getMaxXp($player) * $level ) );
-            LevelUtils::setMaxXp($player, ceil(5000 * LevelUtils::getLevel($player) * 2.7));
+        $exp = $event->getNewXp();
+        do{
+            $exp -= (5000 * LevelUtils::getLevel($player) * 2.7);
+
+            if( $event->getNewXp() > LevelUtils::getMaxXp($player)){
+                LevelUtils::LevelUp($player, 1);
+                LevelUtils::setMaxXp($player, (5000 * LevelUtils::getLevel($player) * 2.7));
+            }
+
+        } while($exp > LevelUtils::getMaxXp($player));
+
+        if( $exp > 0) {
+            LevelUtils::setXp($player, $exp, false);
+            $player->getXpManager()->setXpLevel(LevelUtils::getLevel($player));
         }
-        $player->getXpManager()->setXpLevel($data[$player->getName()]['level']);
+
         $player->getXpManager()->setXpProgress(LevelUtils::getXpPercent($player) / 100);
+        
+
 
     }
 }
