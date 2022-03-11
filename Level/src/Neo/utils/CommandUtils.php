@@ -3,6 +3,7 @@
 namespace Neo\utils;
 
 use Neo\ExtendsLib;
+use Neo\utils\FormUtils;
 use Neo\Level;
 use pocketmine\permission\DefaultPermissionNames;
 use pocketmine\player\Player;
@@ -75,7 +76,7 @@ class CommandUtils {
         ExtendsLib::initCommand(
             "레벨관리", Level::getLang("command.level.management"),
             function(Player $player, array $args) {
-
+                FormUtils::LevelManagement($player);
             }, DefaultPermissionNames::BROADCAST_USER
         );
     }
