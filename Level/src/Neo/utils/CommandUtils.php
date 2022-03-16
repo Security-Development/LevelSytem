@@ -21,9 +21,7 @@ class CommandUtils {
                     $handlePlayer = null;
 
                     foreach( Level::getData() as $key => $value ) {
-                        if( stripos($key, $args[0]) === 0 ) {
-                            $handlePlayer = Server::getInstance()->getOfflinePlayer($key) ?? null;
-                        }
+                        $handlePlayer = ExtendsLib::getPlayerHandle($key, $args[0]);
                     }
 
                     if( $handlePlayer === null ) {
