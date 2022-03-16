@@ -13,16 +13,14 @@ class FormUtils {
         $form = new SimpleForm(function(Player $player, ?int $data) {
             if( is_null($data) )
                 return;
-
-            self::LevelForm($player);
+            
+            $data == 0 ? self::SelectForm($player, 0) : self::SelectForm($player, 1);
         });
 
         $form->setTitle("레벨 시스템 관리");
         $form->setContent("진행할 프로세스를 채팅에 선택해 주세요.");
         $form->addButton("레벨");
         $form->addButton("경험치");
-        $form->addButton("배율 티켓");
-        $form->addButton("서버 배율");
 
         $form->sendToPlayer($player);
     }
@@ -42,8 +40,6 @@ class FormUtils {
         $typeText = match($type) {
             0 => "레벨",
             1 => "경험치",
-            2 => "배율 티켓",
-            3 => "서버 배율",
             default => null
         };
 
