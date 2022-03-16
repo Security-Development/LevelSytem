@@ -62,6 +62,45 @@ class FormUtils {
         $form->sendToPlayer($player);
 
     }
+
+    public static function SubIncForm(Player $player, int $type) : void {
+        $form = new CustomForm(function() {
+
+        });
+
+        $form->setTitle("증가");
+        $form->addInput("증가량을 입력란에 입력해 주세요");
+
+        $form->sendToPlayer($player);
+
+    }
+
+    public static function SubDecForm(Player $player, int $type) : void {
+        $form = new CustomForm(function() {
+
+        });
+
+        $form->setTitle("감소");
+        $form->addInput("감소량을 입력란에 입력해 주세요");
+
+        $form->sendToPlayer($player);
+
+    }
+
+    public static function SubSetForm(Player $player, int $type) : void {
+        $form = new CustomForm(function() {
+
+        });
+
+        $form->setTitle("설정");
+        $form->addInput("설정할 값을 입력란에 입력해 주세요.");
+
+        $form->sendToPlayer($player);
+
+    }
+
+
+
 }
 
 ?>
