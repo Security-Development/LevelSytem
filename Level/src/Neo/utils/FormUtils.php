@@ -27,7 +27,39 @@ class FormUtils {
         $form->sendToPlayer($player);
     }
 
-    public static function LevelForm(Player $player) : void {
+    public static function SelectForm(Player $player, int $type) : void {
+        $form = new CustomForm(function(Player $player, ?array $data) {
+            if( is_null($data) )
+                return;
+        });
+
+        $PlayerData = [];
+
+        foreach(Server::getInstance()->getOnlinePlayers() as $players) {
+            $PlayerData[] = $players->getName();
+        }
+        
+        $typeText = match($type) {
+            0 => "레벨",
+            1 => "경험치",
+            2 => "배율 티켓",
+            3 => "서버 배율",
+            default => null
+        };
+
+        if( is_null($typeText) ) 
+            return;
+
+        $form->setTitle($typeText." 관리");
+        $form->addLabel($typeText."을(를) 관리합니다.");
+        $form->addDropdown("관리할 대상이 접속 중이라면 아래에서 선택해 주세요.", $PlayerData);
+        $form->addInput("기입란에 입력하여 지정하셔도 됩니다.");
+
+        $form->sendToPlayer($player);
+
+    }
+
+    public static function ExpForm(Player $player) : void {
         $form = new CustomForm(function(Player $player, ?array $data) {
             if( is_null($data) )
                 return;
@@ -39,8 +71,8 @@ class FormUtils {
             $PlayerData[] = $players->getName();
         }
 
-        $form->setTitle("레벨 관리");
-        $form->addLabel("레벨을 관리합니다.");
+        $form->setTitle("경험치 관리");
+        $form->addLabel("경험치를 관리합니다.");
         $form->addDropdown("관리할 대상이 접속 중이라면 아래에서 선택해 주세요.", $PlayerData);
         $form->addInput("기입란에 입력하여 지정하셔도 됩니다.");
 
