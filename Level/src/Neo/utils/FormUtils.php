@@ -47,6 +47,21 @@ class FormUtils {
         $form->sendToPlayer($player);
 
     }
+
+    public static function SubLevelForm(Player $player) : void {
+        $form = new SimpleForm(function(Player $player, ?int $data) {
+
+        });
+
+        $form->setTitle("프로세스 목록");
+        $form->setContent("진행할 프로세스를 채팅에 입력해 주세요.");
+        $form->addButton("증가");
+        $form->addButton("감소");
+        $form->addButton("설정");
+
+        $form->sendToPlayer($player);
+
+    }
 }
 
 ?>
