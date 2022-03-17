@@ -18,7 +18,7 @@ class FormUtils {
         });
 
         $form->setTitle("레벨 시스템 관리");
-        $form->setContent("진행할 프로세스를 채팅에 선택해 주세요.");
+        $form->setContent("진행할 프로세스 버튼을 선택해 주세요.");
         $form->addButton("레벨");
         $form->addButton("경험치");
 
@@ -26,16 +26,24 @@ class FormUtils {
     }
 
     public static function SelectForm(Player $player, int $type) : void {
-        $form = new CustomForm(function(Player $player, ?array $data) {
-            if( is_null($data) )
-                return;
-        });
-
         $PlayerData = [];
 
         foreach(Server::getInstance()->getOnlinePlayers() as $players) {
             $PlayerData[] = $players->getName();
         }
+
+        $form = new CustomForm(function(Player $player, ?array $data) use($PlayerData) {
+            if( is_null($data) )
+                return;
+            
+                $handlePlayer = Server::getInstance()->getPlayerByPrefix($PlayerData[$data[0]]);
+
+            if( !is_null($data[1]) )
+                foreach($PlayerData as $names) 
+                    $handlePlayer = ExtendsLib::getPlayerHandle($names, $data[1]);
+            
+            self::SubLevelForm($player, $type, $handlePlayer);
+        });
         
         $typeText = match($type) {
             0 => "레벨",
@@ -55,13 +63,12 @@ class FormUtils {
 
     }
 
-    public static function SubLevelForm(Player $player) : void {
+    public static function SubLevelForm(Player $player, int $type, Player $target) : void {
         $form = new SimpleForm(function(Player $player, ?int $data) {
-
         });
 
         $form->setTitle("프로세스 목록");
-        $form->setContent("진행할 프로세스를 채팅에 입력해 주세요.");
+        $form->setContent($target->getName()."님에 대해 진행할 프로세스를 채팅에 입력해 주세요.");
         $form->addButton("증가");
         $form->addButton("감소");
         $form->addButton("설정");
