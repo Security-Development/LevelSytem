@@ -4,6 +4,7 @@ namespace Neo\utils;
 
 use jojoe77777\FormAPI\CustomForm;
 use jojoe77777\FormAPI\SimpleForm;
+use Neo\ExtendsLib;
 use pocketmine\player\Player;
 use pocketmine\Server;
 
@@ -32,17 +33,18 @@ class FormUtils {
             $PlayerData[] = $players->getName();
         }
 
-        $form = new CustomForm(function(Player $player, ?array $data) use($PlayerData) {
+        $form = new CustomForm(function(Player $player, ?array $data) use($PlayerData, $type) {
             if( is_null($data) )
                 return;
             
-                $handlePlayer = Server::getInstance()->getPlayerByPrefix($PlayerData[$data[0]]);
+                $handlePlayer = Server::getInstance()->getPlayerByPrefix($PlayerData[$data[1]]);
 
-            if( !is_null($data[1]) )
+            if( !is_null($data[2]) )
                 foreach($PlayerData as $names) 
-                    $handlePlayer = ExtendsLib::getPlayerHandle($names, $data[1]);
+                    $handlePlayer = ExtendsLib::getPlayerHandle($names, $data[2]);
             
-            self::SubLevelForm($player, $type, $handlePlayer);
+            if( !is_null($handlePlayer) )
+                self::SubLevelForm($player, $type, $handlePlayer);
         });
         
         $typeText = match($type) {
