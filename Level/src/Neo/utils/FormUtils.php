@@ -56,7 +56,7 @@ class FormUtils {
 
         $form->setTitle($typeText." 관리");
         $form->addLabel($typeText."을(를) 관리합니다.");
-        $form->addDropdown("관리할 대상이 접속 중이라면 아래에서 선택해 주세요.", $PlayerData);
+        $form->addDropdown("관리할 대상이 접속 중이라면 아래에서 선택해 주세요.", $PlayerData, 0);
         $form->addInput("기입란에 입력하여 지정하셔도 됩니다.");
 
         $form->sendToPlayer($player);
