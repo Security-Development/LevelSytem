@@ -69,9 +69,9 @@ class FormUtils {
                 return;
 
             match($data) {
-                0 => self::SubIncForm($player, $type),
-                1 => self::SubDecForm($player, $type),
-                2 => self::SubSetForm($player, $type),
+                0 => self::SubIncForm($player, $type, $target),
+                1 => self::SubDecForm($player, $type, $target),
+                2 => self::SubSetForm($player, $type, $target),
                 default => null
             };
         });
@@ -86,16 +86,16 @@ class FormUtils {
 
     }
 
-    private static function getLabelText(Player $player, int $type) {
-        return $player->getName()."님의 현재 ".self::$typeText[$type]."은(는) ". $type ? LevelUtils::getLevel($player) : LevelUtils::getXp($player)."". ($type ? 'LV' : 'XP')." 입니다.";
+    private static function getLabelText(Player $player, int $type) : string {
+        return $player->getName()."님의 현재 ".self::$typeText[$type]."은(는) ". ($type ? LevelUtils::getXp($player) : LevelUtils::getLevel($player))." ". ($type ? 'XP' : 'LV')." 입니다.";
     }
 
     public static function SubIncForm(Player $player, int $type, Player $target) : void {
-        $form = new CustomForm(function(Player $player , ?array $data) use($type) {
+        $form = new CustomForm(function(Player $player , ?array $data) use($type, $target) {
             if( is_null($data) )
                 return;
             
-            if( !is_numeric($data[1]) || $data[0] < 0 ) {
+            if( !is_numeric($data[1]) || $data[1] < 0 ) {
                 $player->sendMessage("입력하신 값 ".$data[1]."이 올바르지 않아 작업을 이행할 수 없습니다.");
                 return;
             }
@@ -105,6 +105,8 @@ class FormUtils {
             } else {
                 LevelUtils::incLevel($target, $data[1], [true, false]);
             }
+
+            $player->sendMessage($target->getName()."님의 ". self::$typeText[$type]."을(를) ".$data[1]."만큼 증가 시켰습니다.");
         });
 
         $form->setTitle("증가");
@@ -116,7 +118,17 @@ class FormUtils {
     }
 
     public static function SubDecForm(Player $player, int $type) : void {
-        $form = new CustomForm(function() {
+        $form = new CustomForm(function(Player $player , ?array $data) use($type, $target) {
+            if( is_null($data) )
+                return;
+            
+            if( !is_numeric($data[1]) || $data[1] < 0 ) {
+                $player->sendMessage("입력하신 값 ".$data[1]."이 올바르지 않아 작업을 이행할 수 없습니다.");
+                return;
+            }
+
+            $player->sendMessage($target->getName()."님의 ". self::$typeText[$type]."을(를) ".$data[1]."만큼 감소 시켰습니다.");
+            
 
         });
 
