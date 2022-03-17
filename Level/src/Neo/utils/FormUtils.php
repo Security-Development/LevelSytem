@@ -10,6 +10,11 @@ use pocketmine\Server;
 
 class FormUtils {
 
+    private static array $typeText = [
+        0 => "레벨",
+        1 => "경험치"
+    ];
+
     public static function LevelManagement(Player $player) : void{
         $form = new SimpleForm(function(Player $player, ?int $data) {
             if( is_null($data) )
@@ -47,14 +52,7 @@ class FormUtils {
                 self::SubLevelForm($player, $type, $handlePlayer);
         });
         
-        $typeText = match($type) {
-            0 => "레벨",
-            1 => "경험치",
-            default => null
-        };
-
-        if( is_null($typeText) ) 
-            return;
+        $typeText = self::$typeText[$type];
 
         $form->setTitle($typeText." 관리");
         $form->addLabel($typeText."을(를) 관리합니다.");
@@ -66,7 +64,10 @@ class FormUtils {
     }
 
     public static function SubLevelForm(Player $player, int $type, Player $target) : void {
-        $form = new SimpleForm(function(Player $player, ?int $data) use($type) {
+        $form = new SimpleForm(function(Player $player, ?int $data) use($type, $target) {
+            if( is_null($data) )
+                return;
+
             match($data) {
                 0 => self::SubIncForm($player, $type),
                 1 => self::SubDecForm($player, $type),
@@ -85,12 +86,29 @@ class FormUtils {
 
     }
 
-    public static function SubIncForm(Player $player, int $type) : void {
-        $form = new CustomForm(function() {
+    private static function getLabelText(Player $player, int $type) {
+        return $player->getName()."님의 현재 ".self::$typeText[$type]."은(는) ". $type ? LevelUtils::getLevel($player) : LevelUtils::getXp($player)."". ($type ? 'LV' : 'XP')." 입니다.";
+    }
 
+    public static function SubIncForm(Player $player, int $type, Player $target) : void {
+        $form = new CustomForm(function(Player $player , ?array $data) use($type) {
+            if( is_null($data) )
+                return;
+            
+            if( !is_numeric($data[1]) || $data[0] < 0 ) {
+                $player->sendMessage("입력하신 값 ".$data[1]."이 올바르지 않아 작업을 이행할 수 없습니다.");
+                return;
+            }
+            
+            if( $type ) {
+                LevelUtils::incXp($target, $data[1], [true, false]);
+            } else {
+                LevelUtils::incLevel($target, $data[1], [true, false]);
+            }
         });
 
         $form->setTitle("증가");
+        $form->addLabel(self::getLabelText($target, $type));
         $form->addInput("증가량을 입력란에 입력해 주세요");
 
         $form->sendToPlayer($player);
@@ -103,6 +121,7 @@ class FormUtils {
         });
 
         $form->setTitle("감소");
+        $form->addLabel(self::getLabelText($target, $type));
         $form->addInput("감소량을 입력란에 입력해 주세요");
 
         $form->sendToPlayer($player);
@@ -115,6 +134,7 @@ class FormUtils {
         });
 
         $form->setTitle("설정");
+        $form->addLabel(self::getLabelText($target, $type));
         $form->addInput("설정할 값을 입력란에 입력해 주세요.");
 
         $form->sendToPlayer($player);
