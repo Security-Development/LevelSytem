@@ -66,7 +66,13 @@ class FormUtils {
     }
 
     public static function SubLevelForm(Player $player, int $type, Player $target) : void {
-        $form = new SimpleForm(function(Player $player, ?int $data) {
+        $form = new SimpleForm(function(Player $player, ?int $data) use($type) {
+            match($data) {
+                0 => self::SubIncForm($player, $type),
+                1 => self::SubDecForm($player, $type),
+                2 => self::SubSetForm($player, $type),
+                default => null
+            };
         });
 
         $form->setTitle("프로세스 목록");
