@@ -21,6 +21,9 @@ class CommandUtils {
                     $handlePlayer = null;
 
                     foreach( Level::getData() as $key => $value ) {
+                        if( !is_null($handlePlayer) )
+                            break;
+                            
                         $handlePlayer = ExtendsLib::getPlayerHandle($key, $args[0]);
                     }
 

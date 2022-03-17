@@ -100,11 +100,10 @@ class FormUtils {
                 return;
             }
             
-            if( $type ) {
+            if( $type )
                 LevelUtils::incXp($target, $data[1], [true, false]);
-            } else {
+            else 
                 LevelUtils::incLevel($target, $data[1], [true, false]);
-            }
 
             $player->sendMessage($target->getName()."님의 ". self::$typeText[$type]."을(를) ".$data[1]."만큼 증가 시켰습니다.");
         });
@@ -117,7 +116,7 @@ class FormUtils {
 
     }
 
-    public static function SubDecForm(Player $player, int $type) : void {
+    public static function SubDecForm(Player $player, int $type, Player $target) : void {
         $form = new CustomForm(function(Player $player , ?array $data) use($type, $target) {
             if( is_null($data) )
                 return;
@@ -126,6 +125,11 @@ class FormUtils {
                 $player->sendMessage("입력하신 값 ".$data[1]."이 올바르지 않아 작업을 이행할 수 없습니다.");
                 return;
             }
+
+            if( $type )
+                LevelUtils::decXp($target, $data[1], [true, false]);
+            else 
+                LevelUtils::decLevel($target, $data[1], [true, false]);
 
             $player->sendMessage($target->getName()."님의 ". self::$typeText[$type]."을(를) ".$data[1]."만큼 감소 시켰습니다.");
             
@@ -140,9 +144,22 @@ class FormUtils {
 
     }
 
-    public static function SubSetForm(Player $player, int $type) : void {
-        $form = new CustomForm(function() {
+    public static function SubSetForm(Player $player, int $type, Player $target) : void {
+        $form = new CustomForm(function(Player $player , ?array $data) use($type, $target) {
+            if( is_null($data) )
+                return;
+            
+            if( !is_numeric($data[1]) || $data[1] < 0 ) {
+                $player->sendMessage("입력하신 값 ".$data[1]."이 올바르지 않아 작업을 이행할 수 없습니다.");
+                return;
+            }
 
+            if( $type )
+                LevelUtils::setXp($target, $data[1]);
+            else 
+                LevelUtils::setLevel($target, $data[1]);
+
+            $player->sendMessage($target->getName()."님의 ". self::$typeText[$type]."을(를) ".$data[1]."만큼 설정 시켰습니다.");
         });
 
         $form->setTitle("설정");
