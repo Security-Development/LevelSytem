@@ -122,6 +122,36 @@ class LevelUtils implements LevelStruct {
         
     }
 
+    public static function RefreshUp(Player $player, int $newXp) : void{
+
+        $exp = $newXp;
+        do{
+            $exp -= (5000 * self::getLevel($player) * 2.7);
+
+            if( $newXp >= self::getMaxXp($player)){
+                self::LevelUp($player, 1);
+            }
+
+            self::setMaxXp($player, (5000 * self::getLevel($player) * 2.7));
+
+        } while($exp >= self::getMaxXp($player));
+
+        if( $exp > 0) {
+            self::setXp($player, $exp, false);
+            $player->getXpManager()->setXpLevel(self::getLevel($player));
+        }
+
+        $player->getXpManager()->setXpProgress(self::getXpPercent($player) / 100);
+    }
+
+    public static function RefreshXp(Player $player) : void {
+        self::setMaxXp($player, (5000 * self::getLevel($player) * 2.7));
+    }
+
+    public static function sendMessage(Player $player, string $msg) : void {
+        $player->sendMessage(Level::getLang('msg.prefix').' '.$msg);
+    }
+
     public static function AchivedMaxLevel(Closure $closure): void
     {
         
@@ -143,7 +173,7 @@ class LevelUtils implements LevelStruct {
 
     public static function getXpPercent(Player $player): float
     {
-        return (LevelUtils::getXp($player) / LevelUtils::getMaxXp($player)) * 100;
+        return round((LevelUtils::getXp($player) / LevelUtils::getMaxXp($player)) * 100, 2);
     }
 
 }

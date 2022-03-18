@@ -106,6 +106,7 @@ class FormUtils {
                 LevelUtils::incLevel($target, $data[1], [true, false]);
 
             $player->sendMessage($target->getName()."님의 ". self::$typeText[$type]."을(를) ".$data[1]."만큼 증가 시켰습니다.");
+            LevelUtils::RefreshXp($player);
         });
 
         $form->setTitle("증가");
@@ -132,6 +133,7 @@ class FormUtils {
                 LevelUtils::decLevel($target, $data[1], [true, false]);
 
             $player->sendMessage($target->getName()."님의 ". self::$typeText[$type]."을(를) ".$data[1]."만큼 감소 시켰습니다.");
+            LevelUtils::RefreshXp($player);
             
 
         });
@@ -160,6 +162,7 @@ class FormUtils {
                 LevelUtils::setLevel($target, $data[1]);
 
             $player->sendMessage($target->getName()."님의 ". self::$typeText[$type]."을(를) ".$data[1]."만큼 설정 시켰습니다.");
+            LevelUtils::RefreshXp($player);
         });
 
         $form->setTitle("설정");

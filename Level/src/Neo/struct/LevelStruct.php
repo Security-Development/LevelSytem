@@ -54,5 +54,12 @@ interface LevelStruct {
 
     public static function getXpPercent(Player $player) : float;
 
+    # 경험치의 증가로 인해 레벨값과 경험치 재설정 
+    public static function RefreshUp(Player $player, int $exp) : void;
+
+    public static function RefreshXp(Player $player) : void;
+
+    public static function sendMessage(Player $player, string $msg) : void;
+
 }
 ?>
